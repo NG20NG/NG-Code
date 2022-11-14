@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:window_size/window_size.dart';
 import 'package:hive_flutter/adapters.dart';
 
+import './popup.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
@@ -70,7 +72,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 decoration: BoxDecoration(
                     boxShadow: [
                       BoxShadow(
-                        color: Color.fromARGB(67, 28, 28, 28).withOpacity(0.5),
+                        color: const Color.fromARGB(67, 28, 28, 28)
+                            .withOpacity(0.5),
                         spreadRadius: 5,
                         blurRadius: 7,
                         offset:
@@ -96,6 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     children: [
                       TextFormField(
                           controller: title,
+                          maxLength: 20,
                           style: const TextStyle(
                             color: Color.fromARGB(255, 227, 227, 227),
                             fontSize: 13,
@@ -106,8 +110,9 @@ class _MyHomePageState extends State<MyHomePage> {
                             contentPadding:
                                 EdgeInsets.only(top: 10.0, left: 10, right: 10),
                             labelText: 'Title',
-                            labelStyle:
-                                TextStyle(color: Colors.amber, fontSize: 14),
+                            labelStyle: TextStyle(
+                                color: Color.fromARGB(255, 24, 174, 255),
+                                fontSize: 14),
                             hintText: 'Enter a Phone Number',
                             hintStyle: TextStyle(
                                 color: Color.fromARGB(51, 237, 237, 237)),
@@ -120,6 +125,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           )),
                       TextFormField(
                           controller: email,
+                          maxLength: 40,
                           style: const TextStyle(
                               color: Color.fromARGB(255, 227, 227, 227),
                               fontSize: 13),
@@ -129,8 +135,9 @@ class _MyHomePageState extends State<MyHomePage> {
                             contentPadding:
                                 EdgeInsets.only(top: 10.0, left: 10, right: 10),
                             labelText: 'Email',
-                            labelStyle:
-                                TextStyle(color: Colors.amber, fontSize: 14),
+                            labelStyle: TextStyle(
+                                color: Color.fromARGB(255, 24, 174, 255),
+                                fontSize: 14),
                             hintText: 'Enter a Phone Number',
                             hintStyle: TextStyle(
                                 color: Color.fromARGB(51, 237, 237, 237)),
@@ -143,6 +150,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           )),
                       TextFormField(
                           controller: password,
+                          maxLength: 30,
                           style: const TextStyle(
                               color: Color.fromARGB(255, 227, 227, 227),
                               fontSize: 13),
@@ -152,8 +160,9 @@ class _MyHomePageState extends State<MyHomePage> {
                             contentPadding:
                                 EdgeInsets.only(top: 10.0, left: 10, right: 10),
                             labelText: 'Password',
-                            labelStyle:
-                                TextStyle(color: Colors.amber, fontSize: 14),
+                            labelStyle: TextStyle(
+                                color: Color.fromARGB(255, 24, 174, 255),
+                                fontSize: 14),
                             hintText: 'Enter a Phone Number',
                             hintStyle: TextStyle(
                                 color: Color.fromARGB(51, 237, 237, 237)),
@@ -166,18 +175,20 @@ class _MyHomePageState extends State<MyHomePage> {
                           )),
                       TextFormField(
                           controller: description,
-                          maxLines: 3,
+                          maxLength: 30,
+                          maxLines: 1,
                           style: const TextStyle(
                               color: Color.fromARGB(255, 227, 227, 227),
-                              fontSize: 10),
+                              fontSize: 14),
                           cursorColor: const Color.fromARGB(255, 144, 144, 144),
                           decoration: const InputDecoration(
                             fillColor: Colors.white,
                             contentPadding:
                                 EdgeInsets.only(top: 20.0, left: 10, right: 10),
                             labelText: 'Description',
-                            labelStyle:
-                                TextStyle(color: Colors.amber, fontSize: 14),
+                            labelStyle: TextStyle(
+                                color: Color.fromARGB(255, 24, 174, 255),
+                                fontSize: 14),
                             hintText: 'Enter a Phone Number',
                             hintStyle: TextStyle(
                                 color: Color.fromARGB(51, 237, 237, 237)),
@@ -192,12 +203,17 @@ class _MyHomePageState extends State<MyHomePage> {
                           child: ElevatedButton(
                               onPressed: () {
                                 setState(() {
-                                  box.add([
-                                    title.text,
-                                    email.text,
-                                    password.text,
-                                    description.text
-                                  ]);
+                                  if (title.text.isNotEmpty &&
+                                      email.text.isNotEmpty &&
+                                      password.text.isNotEmpty &&
+                                      description.text.isNotEmpty) {
+                                    box.put(title.text, [
+                                      title.text,
+                                      email.text,
+                                      password.text,
+                                      description.text
+                                    ]);
+                                  }
                                 });
                               },
                               child: const Text("Save",
@@ -217,17 +233,80 @@ class _MyHomePageState extends State<MyHomePage> {
                 color: const Color.fromARGB(255, 35, 35, 35),
                 padding: const EdgeInsets.all(5.0),
                 child: GridView.count(
-                  childAspectRatio: 2,
-                  crossAxisCount: 3,
-                  children: List.generate(box.values.length + 5, (index) {
+                  childAspectRatio: 2.4,
+                  crossAxisCount: 2,
+                  children: List.generate(box.values.length, (index) {
                     return Container(
-                        width: double.infinity,
-                        height: double.infinity,
-                        child: Card(
-                            child: Center(
-                                child: Text(
-                          'Item $index',
-                        ))));
+                      margin: const EdgeInsets.all(5),
+                      width: double.infinity,
+                      height: double.infinity,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(2),
+                          color: const Color.fromARGB(255, 55, 55, 55)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "${box.getAt(index)[0]}",
+                                  style: const TextStyle(
+                                      fontSize: 11,
+                                      color:
+                                          Color.fromARGB(255, 205, 205, 205)),
+                                ),
+                                Text(
+                                  "${box.getAt(index)[1]}",
+                                  style: const TextStyle(
+                                      fontSize: 11,
+                                      color:
+                                          Color.fromARGB(255, 205, 205, 205)),
+                                ),
+                                Text(
+                                  "${box.getAt(index)[2]}",
+                                  style: const TextStyle(
+                                      fontSize: 11,
+                                      color:
+                                          Color.fromARGB(255, 205, 205, 205)),
+                                ),
+                                Text(
+                                  "${box.getAt(index)[3]}",
+                                  style: const TextStyle(
+                                      fontSize: 11,
+                                      color:
+                                          Color.fromARGB(255, 205, 205, 205)),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              width: 20,
+                              child: ElevatedButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) =>
+                                            PopUp(context, index: index),
+                                      );
+                                    });
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    minimumSize: Size.infinite,
+                                    padding: EdgeInsets.zero,
+                                  ),
+                                  child: const Icon(
+                                    Icons.delete,
+                                    size: 17.0,
+                                  )),
+                            )
+                          ],
+                        ),
+                      ),
+                    );
                   }),
                 ),
               ),
