@@ -1,14 +1,17 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:window_size/window_size.dart';
+import 'package:hive_flutter/adapters.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-    setWindowTitle('Flutter Demo');
-    setWindowMinSize(const Size(500, 300));
-    setWindowMaxSize(const Size(500, 300));
+    setWindowTitle('NG Code');
+    setWindowMinSize(const Size(650, 400));
+    setWindowMaxSize(const Size(750, 450));
   }
+  await Hive.initFlutter();
+  await Hive.openBox('cards');
   runApp(const MyApp());
 }
 
@@ -19,7 +22,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'NG Code',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -38,22 +41,198 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
+bool cond = false;
+
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
+    TextEditingController title = TextEditingController();
+    TextEditingController email = TextEditingController();
+    TextEditingController password = TextEditingController();
+    TextEditingController description = TextEditingController();
+
+    var box = Hive.box("cards");
     return Scaffold(
       appBar: PreferredSize(
           preferredSize: const Size.fromHeight(0.0), // here the desired height
           child: AppBar(title: Text(widget.title))),
-      body: Center(
-        child: Container(
-          height: double.infinity,
-          width: double.infinity,
-          decoration:
-              const BoxDecoration(color: Color.fromARGB(255, 26, 26, 26)),
-          child: Column(children: [
-            ElevatedButton(onPressed: () {}, child: const Text("child"))
-          ]),
+      body: Container(
+        height: double.infinity,
+        width: double.infinity,
+        decoration: const BoxDecoration(color: Color.fromARGB(255, 34, 34, 34)),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Expanded(
+              flex: 3,
+              child: Container(
+                decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: Color.fromARGB(67, 28, 28, 28).withOpacity(0.5),
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset:
+                            const Offset(0, 3), // changes position of shadow
+                      )
+                    ],
+                    color: const Color.fromARGB(255, 49, 49, 49),
+                    border: const Border(
+                      right: BorderSide(
+                        color: Color.fromARGB(21, 255, 0, 0),
+                        width: 1.0,
+                      ),
+                    )),
+                width: double.infinity,
+                height: double.infinity,
+                child: Center(
+                    child: Container(
+                  padding: const EdgeInsets.all(10),
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      TextFormField(
+                          controller: title,
+                          style: const TextStyle(
+                            color: Color.fromARGB(255, 227, 227, 227),
+                            fontSize: 13,
+                          ),
+                          cursorColor: const Color.fromARGB(255, 144, 144, 144),
+                          decoration: const InputDecoration(
+                            fillColor: Colors.white,
+                            contentPadding:
+                                EdgeInsets.only(top: 10.0, left: 10, right: 10),
+                            labelText: 'Title',
+                            labelStyle:
+                                TextStyle(color: Colors.amber, fontSize: 14),
+                            hintText: 'Enter a Phone Number',
+                            hintStyle: TextStyle(
+                                color: Color.fromARGB(51, 237, 237, 237)),
+                            focusColor: Colors.red,
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Color.fromARGB(255, 6, 6, 6))),
+                            border:
+                                OutlineInputBorder(borderSide: BorderSide()),
+                          )),
+                      TextFormField(
+                          controller: email,
+                          style: const TextStyle(
+                              color: Color.fromARGB(255, 227, 227, 227),
+                              fontSize: 13),
+                          cursorColor: const Color.fromARGB(255, 144, 144, 144),
+                          decoration: const InputDecoration(
+                            fillColor: Colors.white,
+                            contentPadding:
+                                EdgeInsets.only(top: 10.0, left: 10, right: 10),
+                            labelText: 'Email',
+                            labelStyle:
+                                TextStyle(color: Colors.amber, fontSize: 14),
+                            hintText: 'Enter a Phone Number',
+                            hintStyle: TextStyle(
+                                color: Color.fromARGB(51, 237, 237, 237)),
+                            focusColor: Colors.red,
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Color.fromARGB(255, 6, 6, 6))),
+                            border:
+                                OutlineInputBorder(borderSide: BorderSide()),
+                          )),
+                      TextFormField(
+                          controller: password,
+                          style: const TextStyle(
+                              color: Color.fromARGB(255, 227, 227, 227),
+                              fontSize: 13),
+                          cursorColor: const Color.fromARGB(255, 144, 144, 144),
+                          decoration: const InputDecoration(
+                            fillColor: Colors.white,
+                            contentPadding:
+                                EdgeInsets.only(top: 10.0, left: 10, right: 10),
+                            labelText: 'Password',
+                            labelStyle:
+                                TextStyle(color: Colors.amber, fontSize: 14),
+                            hintText: 'Enter a Phone Number',
+                            hintStyle: TextStyle(
+                                color: Color.fromARGB(51, 237, 237, 237)),
+                            focusColor: Colors.red,
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Color.fromARGB(255, 6, 6, 6))),
+                            border:
+                                OutlineInputBorder(borderSide: BorderSide()),
+                          )),
+                      TextFormField(
+                          controller: description,
+                          maxLines: 3,
+                          style: const TextStyle(
+                              color: Color.fromARGB(255, 227, 227, 227),
+                              fontSize: 10),
+                          cursorColor: const Color.fromARGB(255, 144, 144, 144),
+                          decoration: const InputDecoration(
+                            fillColor: Colors.white,
+                            contentPadding:
+                                EdgeInsets.only(top: 20.0, left: 10, right: 10),
+                            labelText: 'Description',
+                            labelStyle:
+                                TextStyle(color: Colors.amber, fontSize: 14),
+                            hintText: 'Enter a Phone Number',
+                            hintStyle: TextStyle(
+                                color: Color.fromARGB(51, 237, 237, 237)),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Color.fromARGB(255, 6, 6, 6))),
+                            border:
+                                OutlineInputBorder(borderSide: BorderSide()),
+                          )),
+                      SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                              onPressed: () {
+                                setState(() {
+                                  box.add([
+                                    title.text,
+                                    email.text,
+                                    password.text,
+                                    description.text
+                                  ]);
+                                });
+                              },
+                              child: const Text("Save",
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 188, 188, 188),
+                                  ))))
+                    ],
+                  ),
+                )),
+              ),
+            ),
+            Expanded(
+              flex: 7,
+              child: Container(
+                height: double.infinity,
+                width: double.infinity,
+                color: const Color.fromARGB(255, 35, 35, 35),
+                padding: const EdgeInsets.all(5.0),
+                child: GridView.count(
+                  childAspectRatio: 2,
+                  crossAxisCount: 3,
+                  children: List.generate(box.values.length + 5, (index) {
+                    return Container(
+                        width: double.infinity,
+                        height: double.infinity,
+                        child: Card(
+                            child: Center(
+                                child: Text(
+                          'Item $index',
+                        ))));
+                  }),
+                ),
+              ),
+            )
+          ],
         ),
       ),
     );
