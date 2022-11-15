@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:window_size/window_size.dart';
+// ignore: depend_on_referenced_packages
 import 'package:hive_flutter/adapters.dart';
+import 'package:flutter/services.dart';
 
 import './popup.dart';
 
@@ -54,6 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
     TextEditingController description = TextEditingController();
 
     var box = Hive.box("cards");
+    var condition = false;
     return Scaffold(
       appBar: PreferredSize(
           preferredSize: const Size.fromHeight(0.0), // here the desired height
@@ -233,81 +236,133 @@ class _MyHomePageState extends State<MyHomePage> {
                 color: const Color.fromARGB(255, 35, 35, 35),
                 padding: const EdgeInsets.all(5.0),
                 child: GridView.count(
-                  childAspectRatio: 2.4,
+                  childAspectRatio: 2.3,
                   crossAxisCount: 2,
-                  children: List.generate(box.values.length, (index) {
-                    return Container(
-                      margin: const EdgeInsets.all(5),
-                      width: double.infinity,
-                      height: double.infinity,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(2),
-                          color: const Color.fromARGB(255, 55, 55, 55)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "${box.getAt(index)[0]}",
-                                  style: const TextStyle(
-                                      fontSize: 11,
-                                      color:
-                                          Color.fromARGB(255, 205, 205, 205)),
-                                ),
-                                Text(
-                                  "${box.getAt(index)[1]}",
-                                  style: const TextStyle(
-                                      fontSize: 11,
-                                      color:
-                                          Color.fromARGB(255, 205, 205, 205)),
-                                ),
-                                Text(
-                                  "${box.getAt(index)[2]}",
-                                  style: const TextStyle(
-                                      fontSize: 11,
-                                      color:
-                                          Color.fromARGB(255, 205, 205, 205)),
-                                ),
-                                Text(
-                                  "${box.getAt(index)[3]}",
-                                  style: const TextStyle(
-                                      fontSize: 11,
-                                      color:
-                                          Color.fromARGB(255, 205, 205, 205)),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              width: 20,
-                              child: ElevatedButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) =>
-                                            PopUp(context, index: index),
-                                      );
-                                    });
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    minimumSize: Size.infinite,
-                                    padding: EdgeInsets.zero,
+                  children: condition == true || condition == false
+                      ? box.values
+                          .map((elem) => Container(
+                                margin: const EdgeInsets.all(5),
+                                width: double.infinity,
+                                height: double.infinity,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(2),
+                                    color:
+                                        const Color.fromARGB(255, 55, 55, 55)),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          SizedBox(
+                                            height: 15,
+                                            child: TextButton(
+                                              onPressed: () async {
+                                                await Clipboard.setData(
+                                                    ClipboardData(
+                                                        text: "${elem[0]}"));
+                                              },
+                                              child: Text(
+                                                "${elem[0]}",
+                                                style: const TextStyle(
+                                                    fontSize: 11,
+                                                    color: Color.fromARGB(
+                                                        255, 205, 205, 205)),
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 18,
+                                            child: TextButton(
+                                              onPressed: () async {
+                                                await Clipboard.setData(
+                                                    ClipboardData(
+                                                        text: "${elem[1]}"));
+                                              },
+                                              child: Text(
+                                                "${elem[1]}",
+                                                style: const TextStyle(
+                                                    fontSize: 11,
+                                                    color: Color.fromARGB(
+                                                        255, 205, 205, 205)),
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 18,
+                                            child: TextButton(
+                                              onPressed: () async {
+                                                await Clipboard.setData(
+                                                    ClipboardData(
+                                                        text: "${elem[2]}"));
+                                              },
+                                              child: Text(
+                                                "${elem[2]}",
+                                                style: const TextStyle(
+                                                    fontSize: 11,
+                                                    color: Color.fromARGB(
+                                                        255, 205, 205, 205)),
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 18,
+                                            child: TextButton(
+                                              onPressed: () async {
+                                                await Clipboard.setData(
+                                                    ClipboardData(
+                                                        text: "${elem[3]}"));
+                                              },
+                                              child: Text(
+                                                "${elem[3]}",
+                                                style: const TextStyle(
+                                                    fontSize: 11,
+                                                    color: Color.fromARGB(
+                                                        255, 205, 205, 205)),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        width: 20,
+                                        child: ElevatedButton(
+                                            onPressed: () async {
+                                              var a = await showDialog(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) =>
+                                                        PopUp(context,
+                                                            index: elem[0]),
+                                              );
+                                              setState(() {
+                                                if (a == "a") {
+                                                  condition = !condition;
+                                                }
+                                              });
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              minimumSize: Size.infinite,
+                                              padding: EdgeInsets.zero,
+                                            ),
+                                            child: const Icon(
+                                              Icons.delete,
+                                              size: 17.0,
+                                            )),
+                                      )
+                                    ],
                                   ),
-                                  child: const Icon(
-                                    Icons.delete,
-                                    size: 17.0,
-                                  )),
-                            )
-                          ],
-                        ),
-                      ),
-                    );
-                  }),
+                                ),
+                              ))
+                          .toList()
+                      : [Container()],
                 ),
               ),
             )

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+
+// ignore: depend_on_referenced_packages
 import 'package:hive_flutter/adapters.dart';
 
 class PopUp extends StatefulWidget {
   const PopUp(BuildContext context, {super.key, required this.index});
+  // ignore: prefer_typing_uninitialized_variables
   final index;
   @override
   State<PopUp> createState() => _PopUpState();
@@ -13,13 +16,9 @@ class _PopUpState extends State<PopUp> {
   Widget build(BuildContext context) {
     TextEditingController delete = TextEditingController();
     var box = Hive.box("cards");
-    void deleteBox() {
-      box.deleteAt(widget.index);
-    }
-
     return AlertDialog(
         title: Text(
-          "Delete < ${box.getAt(widget.index)[0]} >",
+          "Delete < ${widget.index} >",
           style: const TextStyle(color: Colors.white),
         ),
         backgroundColor: const Color.fromARGB(255, 37, 37, 37),
@@ -52,11 +51,10 @@ class _PopUpState extends State<PopUp> {
                 child: ElevatedButton(
                     onPressed: () {
                       setState(() {
-                        if (delete.text == "${box.getAt(widget.index)[0]}") {
-                          debugPrint(delete.text);
-                          // box.delete(delete.text);
-                          // Navigator.pop(context);
-                        } else {}
+                        if (delete.text == widget.index) {
+                          Navigator.pop(context, "a");
+                          box.delete(widget.index);
+                        }
                       });
                     },
                     child: const Text("Delete")),
